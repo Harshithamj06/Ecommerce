@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Ecommerce Website</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f3f3;
+        }
+        header {
+            background: #222;
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header nav a {
+            color: #fff;
+            margin-left: 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .hero {
+            background: url('https://picsum.photos/1200/400') center/cover no-repeat;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            text-shadow: 2px 2px 5px black;
+        }
+        .container {
+            width: 90%;
+            margin: 30px auto;
+        }
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .product {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #cartPage {
+            display: none;
+        }
+        .contact-form, .blog-page {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Ecommerce</h2>
+        <nav>
+            <a href="#" onclick="showShop()">Shop</a>
+            <a href="#" onclick="showCart()">View Cart</a>
+            <a href="#" onclick="showBlog()">Blog</a>
+            <a href="#" onclick="showContact()">Contact</a>
+        </nav>
+    </header>
+
+    <div class="hero">Welcome to Our Shop</div>
+
+    <div class="container">
+
+        <!-- SHOP PAGE -->
+        <div id="shopPage">
+            <h2>Shop Products</h2>
+            <div class="products" id="productList"></div>
+        </div>
+
+        <!-- CART PAGE -->
+        <div id="cartPage">
+            <h2>Your Cart</h2>
+            <div id="cartItems"></div>
+            <h3 id="totalAmount"></h3>
+            <button onclick="purchase()">Purchase</button>
+        </div>
+
+        <!-- BLOG PAGE -->
+        <div class="blog-page" id="blogPage">
+            <h2>Blog</h2>
+            <p>This is a sample blog page. You can redirect to any blog URL or add more posts.</p>
+        </div>
+
+        <!-- CONTACT FORM -->
+        <div class="contact-form" id="contactPage">
+            <h2>Contact Us</h2>
+            <input type="text" placeholder="Your Name" />
+            <input type="email" placeholder="Your Email" />
+            <textarea placeholder="Message"></textarea>
+            <button>Submit</button>
+        </div>
+
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: "Product 1", price: 499, img: "https://picsum.photos/300?random=1" },
+            { id: 2, name: "Product 2", price: 699, img: "https://picsum.photos/300?random=2" },
+            { id: 3, name: "Product 3", price: 999, img: "https://picsum.photos/300?random=3" }
+        ];
+
+        let cart = [];
+
+        function loadProducts() {
+            const list = document.getElementById("productList");
+            list.innerHTML = products.map(p => `
+                <div class="product">
+                    <img src="${p.img}" />
+                    <h3>${p.name}</h3>
+                    <p>Price: ₹${p.price}</p>
+                    <button onclick="addToCart(${p.id})">Add to Cart</button>
+                </div>`
+            ).join("");
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            cart.push(product);
+            alert("Item added to cart!");
+        }
+
+        function showShop() {
+            hideAll();
+            document.getElementById("shopPage").style.display = "block";
+        }
+        function showCart() {
+            hideAll();
+            document.getElementById("cartPage").style.display = "block";
+            loadCart();
+        }
+        function showBlog() {
+            hideAll();
+            document.getElementById("blogPage").style.display = "block";
+        }
+        function showContact() {
+            hideAll();
+            document.getElementById("contactPage").style.display = "block";
+        }
+
+        function hideAll() {
+            document.getElementById("shopPage").style.display = "none";
+            document.getElementById("cartPage").style.display = "none";
+            document.getElementById("blogPage").style.display = "none";
+            document.getElementById("contactPage").style.display = "none";
+        }
+
+        function loadCart() {
+            const list = document.getElementById("cartItems");
+            let total = 0;
+            list.innerHTML = cart.map(item => {
+                total += item.price;
+                return `<p>${item.name} - ₹${item.price}</p>`;
+            }).join("");
+            document.getElementById("totalAmount").innerText = `Total: ₹${total}`;
+        }
+
+        function purchase() {
+            if(cart.length === 0) return alert("Cart is empty!");
+            alert("Purchase Successful!");
+            cart = [];
+            showShop();
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>
